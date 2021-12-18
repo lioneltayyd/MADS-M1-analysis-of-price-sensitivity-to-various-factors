@@ -2,7 +2,20 @@
 
 ## __Project Purpose__
 
-... 
+Analyse price sensitivity of different sector to multiple factors. Sectors include: 
+
+ETF | Description. 
+--- | ---
+XLF | Finance.
+XHB | Homebuilder.
+XLK | General tech.
+XLY | Discretionary.
+XLP | Staple.
+XRT | Retail.
+XLI | Industrial.
+XLB | Basic materials.
+XTL | Telecomm.
+XLU | Utilities.
 
 --- 
 
@@ -15,6 +28,16 @@ pipfile | For setting up the `pipenv` and tracking all the installed dependencie
 --- 
 
 ## __Guide On Initial Setup__
+
+1.  Clone the repo to your directory and create a new branch. 
+
+    ```
+    git clone https://github.com/lioneltayyd/MADS-M1-analysis-of-price-sensitivity-to-various-factors.git; 
+    git checkout -b dev-brendan; 
+    git add .; 
+    git commit -m "Initiate a new branch."; 
+    git push origin; 
+    ```
 
 1.  Ensure that you are using python 3.8.5 to avoid any code or dependencies 
     conflict due to version difference. 
@@ -39,5 +62,5 @@ pipfile | For setting up the `pipenv` and tracking all the installed dependencie
     that pipenv should match the exact version when installing the packages. 
 
     ```bash
-    pipenv shell &&  pipenv sync; 
+    pipenv shell && pipenv sync; 
     ```
