@@ -1,0 +1,19 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[packages]
+regex = "*"
+numpy = "*"
+pandas = "*"
+ipykernel = "*"
+bokeh = "==2.2.2"
+panel = "==0.10.3"
+holoviews = "==1.14.1"
+hvplot = "==0.7.1"
+streamlit = "==0.78.0"
+watchdog = "*"
+
+[requires]
+python_version = "3.8"
