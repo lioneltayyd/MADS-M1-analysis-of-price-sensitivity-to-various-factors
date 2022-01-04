@@ -30,16 +30,21 @@ class AggregateMeasures(DataSet):
 				file_name="sector_metrics_aggregate.csv",
 				ticker_event_dates = None):
 		
+		#The source data set for aggregation, use a provide instance or create a new one.
 		if ticker_event_dates == None:
 			self.ticker_event_dates = TickerEventDates()
 		else:
 			self.ticker_event_dates = ticker_event_dates
 
+		#The full list of factors/ events from the source data 
 		self.factors = self.ticker_event_dates.event_dates.column_list + self.ticker_event_dates.ecomonic_reported_dates.column_list
 
+		#If not using csv Set the df attribute through applyng the aggregation to the source data 
 		if use_csv == False:
 			print("Creating aggregations")
 			self.df = self.get_aggregation(metric_options, dict_intent_measure)
+		
+		#construct dataset	
 		DataSet.__init__(self, file_name, use_csv)
 	def get_aggregation(self, metric_options, dict_intent_measure):
 		df_tickers =  self.ticker_event_dates.df
