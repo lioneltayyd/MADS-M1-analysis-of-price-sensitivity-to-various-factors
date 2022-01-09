@@ -162,6 +162,7 @@ class GetImpVolatility(GetTickerData):
 
 		return vix
 	
+	
 	def compute_vix_chg_tscore(self, df:pd.DataFrame): 
 		'''Compute tscore to measure price change magnitude.'''
 

@@ -40,7 +40,7 @@ class ProcessNewsData(ManageDataset):
 
 
 	def extract_keywords(self, df_news:pd.DataFrame, keyword_mapping:dict=NEWS_KEYWORDS_MAPPING): 
-		headline_keywords = [t for k, terms in keyword_mapping.items() for t in terms] 
+		headline_keywords = [t for _, terms in keyword_mapping.items() for t in terms] 
 
 		# Combine the keywords into a regex pattern. 
 		re_pattern = f"""({"|".join(headline_keywords)})""" 
