@@ -31,7 +31,7 @@ class GetTickerData():
 		processed_data = self.compute_rolling_volume(processed_data) 
 		processed_data = self.compute_bollinger(processed_data) 
 		processed_data = self.compute_price_chg_tscore(processed_data) 
-		processed_data = self.compute_vix_chg_tscore(processed_data) 
+		#processed_data = self.compute_vix_chg_tscore(processed_data) 
 
 		return processed_data
 
@@ -136,27 +136,13 @@ class GetTickerData():
 		return df 
 
 
-	def compute_vix_chg_tscore(self, df:pd.DataFrame): 
-		'''Compute tscore to measure price change magnitude.'''
-
-		# Compute the t-score for VIX. 
-		price_chg_c2c_rollavg = df["vix_chg_c2c"].rolling(window=360, min_periods=360, win_type=None).mean() 
-
-		price_chg_c2c_rollstd = df["vix_chg_c2c"].rolling(window=360, min_periods=360, win_type=None).std(ddof=0) 
-
-		df["vix_tscore_c2c"] = (df["vix_chg_c2c"] - price_chg_c2c_rollavg) / price_chg_c2c_rollstd 
-
-		return df 
-
-
-
 # %%
 class GetImpVolatility(GetTickerData):
 	'''Extends Ticker with modifications specific to the Implied Volatility Index'''
 
 	def __init__(self): 
 		GetTickerData.__init__(self, ticker_name="^VIX") 
-		self.vix_history = self.get_vix_history() 
+		self.vix_history = self.compute_vix_chg_tscore(self.get_vix_history()) 
 
 
 	def get_vix_history(self): 
@@ -176,3 +162,15 @@ class GetImpVolatility(GetTickerData):
 		vix.loc[:, "vix_chg_c2c"] = vix["vix_close"].pct_change(1) 
 
 		return vix
+	
+	def compute_vix_chg_tscore(self, df:pd.DataFrame): 
+		'''Compute tscore to measure price change magnitude.'''
+
+		# Compute the t-score for VIX. 
+		price_chg_c2c_rollavg = df["vix_chg_c2c"].rolling(window=360, min_periods=360, win_type=None).mean() 
+
+		price_chg_c2c_rollstd = df["vix_chg_c2c"].rolling(window=360, min_periods=360, win_type=None).std(ddof=0) 
+
+		df["vix_tscore_c2c"] = (df["vix_chg_c2c"] - price_chg_c2c_rollavg) / price_chg_c2c_rollstd 
+
+		return df
