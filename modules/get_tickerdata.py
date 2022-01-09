@@ -102,8 +102,8 @@ class GetTickerData():
 
 		# Compute the rolling average and standard deviation. 
 		tp =  (df["close"] + df["low"] + df["high"]) / 3 
-		tp_rollavg = tp.rolling(window=360, min_periods=90, win_type=None).mean() 
-		tp_rollstd = tp.rolling(window=360, min_periods=90, win_type=None).std(ddof=0) 
+		tp_rollavg = tp.rolling(window=360, min_periods=360, win_type=None).mean() 
+		tp_rollstd = tp.rolling(window=360, min_periods=360, win_type=None).std(ddof=0) 
 
 
 		# Compute Bollinger Band. 
@@ -121,13 +121,13 @@ class GetTickerData():
 		'''Compute tscore to measure price change magnitude.'''
 
 		# Compute the t-score for price change. 
-		price_chg_c2o_rollavg = df["price_chg_c2o"].rolling(window=360, min_periods=90, win_type=None).mean() 
-		price_chg_o2c_rollavg = df["price_chg_o2c"].rolling(window=360, min_periods=90, win_type=None).mean() 
-		price_chg_c2c_rollavg = df["price_chg_c2c"].rolling(window=360, min_periods=90, win_type=None).mean() 
+		price_chg_c2o_rollavg = df["price_chg_c2o"].rolling(window=360, min_periods=360, win_type=None).mean() 
+		price_chg_o2c_rollavg = df["price_chg_o2c"].rolling(window=360, min_periods=360, win_type=None).mean() 
+		price_chg_c2c_rollavg = df["price_chg_c2c"].rolling(window=360, min_periods=360, win_type=None).mean() 
 
-		price_chg_c2o_rollstd = df["price_chg_c2o"].rolling(window=360, min_periods=90, win_type=None).std(ddof=0) 
-		price_chg_o2c_rollstd = df["price_chg_o2c"].rolling(window=360, min_periods=90, win_type=None).std(ddof=0) 
-		price_chg_c2c_rollstd = df["price_chg_c2c"].rolling(window=360, min_periods=90, win_type=None).std(ddof=0) 
+		price_chg_c2o_rollstd = df["price_chg_c2o"].rolling(window=360, min_periods=360, win_type=None).std(ddof=0) 
+		price_chg_o2c_rollstd = df["price_chg_o2c"].rolling(window=360, min_periods=360, win_type=None).std(ddof=0) 
+		price_chg_c2c_rollstd = df["price_chg_c2c"].rolling(window=360, min_periods=360, win_type=None).std(ddof=0) 
 
 		df["tscore_c2o"] = (df["price_chg_c2o"] - price_chg_c2o_rollavg) / price_chg_c2o_rollstd 
 		df["tscore_o2c"] = (df["price_chg_o2c"] - price_chg_o2c_rollavg) / price_chg_o2c_rollstd 
@@ -140,9 +140,9 @@ class GetTickerData():
 		'''Compute tscore to measure price change magnitude.'''
 
 		# Compute the t-score for VIX. 
-		price_chg_c2c_rollavg = df["vix_chg_c2c"].rolling(window=360, min_periods=90, win_type=None).mean() 
+		price_chg_c2c_rollavg = df["vix_chg_c2c"].rolling(window=360, min_periods=360, win_type=None).mean() 
 
-		price_chg_c2c_rollstd = df["vix_chg_c2c"].rolling(window=360, min_periods=90, win_type=None).std(ddof=0) 
+		price_chg_c2c_rollstd = df["vix_chg_c2c"].rolling(window=360, min_periods=360, win_type=None).std(ddof=0) 
 
 		df["vix_tscore_c2c"] = (df["vix_chg_c2c"] - price_chg_c2c_rollavg) / price_chg_c2c_rollstd 
 
