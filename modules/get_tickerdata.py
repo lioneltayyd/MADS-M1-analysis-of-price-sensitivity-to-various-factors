@@ -31,7 +31,6 @@ class GetTickerData():
 		processed_data = self.compute_rolling_volume(processed_data) 
 		processed_data = self.compute_bollinger(processed_data) 
 		processed_data = self.compute_price_chg_tscore(processed_data) 
-		#processed_data = self.compute_vix_chg_tscore(processed_data) 
 
 		return processed_data
 
