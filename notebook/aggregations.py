@@ -1,52 +1,51 @@
-from tickereventdates import *
+# %%
+# Python modules. 
+import re
 import pandas as pd 
 import numpy as np 
-import re
+
+# Custom modules. 
+from modules.consolidate_eventdates import *
+from modules.compute_aggregations import * 
+
+# Custom configuration.
+from config.config import INTENT_MEASURES, RE_PATS_AND_CONDITIONS
 
 
-class AggregateMeasures(DataSet):
-	'''DataSet which creates and stores aggregate analysis of tickers and related events'''
-	def __init__(self, 
-				metric_options= [
-					"vix_open_minus_thresh", "vix_close_minus_thresh", 
-					"price_chg_c2o", "price_chg_o2c", "price_chg_c2c", 
-					"volume_diff_to_med", "volume_pchg_from_med", 
-					"zscore_bo", "zscore_c2o", "zscore_o2c", "zscore_c2c", 
-				], 
-				dict_intent_measure = {
-					"dir": {
-						"price_chg_c2o", "price_chg_o2c", "price_chg_c2c", 
-						"volume_pchg_from_med", 
-					}, 
-					"mag": {
-						"price_chg_c2o", "price_chg_o2c", "price_chg_c2c", 
-						"zscore_bo", "zscore_c2o", "zscore_o2c", "zscore_c2c", 
-					},  
-					"avg": {
-						"vix_open_minus_thresh", "vix_close_minus_thresh", 
-					}, 
-				},
-				use_csv=True, 
-				file_name="sector_metrics_aggregate.csv",
-				ticker_event_dates = None):
+
+# %%
+class AggregateMeasures(ManageDataset):
+	'''ManageDataset which creates and stores aggregate analysis of tickers and related events'''
+
+	def __init__(
+			self, 
+			intent_measure:dict=INTENT_MEASURES, 
+			use_csv:bool=True, 
+			file_name:str="sector_price_history_processed_stg_3.csv",
+			ticker_event_dates=None 
+		):
 		
-		#The source data set for aggregation, use a provide instance or create a new one.
+		# The source data set for aggregation, use a provide instance or create a new one.
 		if ticker_event_dates == None:
-			self.ticker_event_dates = TickerEventDates()
+			self.ticker_event_dates = ConsolidateDates()
 		else:
 			self.ticker_event_dates = ticker_event_dates
 
 		#The full list of factors/ events from the source data 
-		self.factors = self.ticker_event_dates.event_dates.column_list + self.ticker_event_dates.ecomonic_reported_dates.column_list
+		self.factors = self.ticker_event_dates.event_dates.column_list \
+			+ self.ticker_event_dates.ecomonic_reported_dates.column_list \
+			+ self.ticker_event_dates.news_headline_keywords
 
 		#If not using csv Set the df attribute through applyng the aggregation to the source data 
 		if use_csv == False:
 			print("Creating aggregations")
-			self.df = self.get_aggregation(metric_options, dict_intent_measure)
+			self.df = self.get_aggregation(intent_measure)
 		
-		#construct dataset	
-		DataSet.__init__(self, file_name, use_csv)
-	def get_aggregation(self, metric_options, dict_intent_measure):
+		#construct dataset. 
+		ManageDataset.__init__(self, file_name, use_csv)
+
+
+	def get_aggregation(self, dict_intent_measure):
 		df_tickers =  self.ticker_event_dates.df
 		# An empty dataframe to consolidate all the aggregates for 
 		# different metrics. 
@@ -144,15 +143,18 @@ class AggregateMeasures(DataSet):
 		cols = ["ticker", "factor"] + df_consolidated_agg.columns[:-2].to_list() 
 		df_consolidated_agg = df_consolidated_agg[cols]
 		return df_consolidated_agg
-	def identify_covergence(self,regex_pats_n_conditions = {"_dir_\\d" : 0.7,"_mag_\\d" : 0.9, "_avg_\\d" : 2.0 }):
+
+
+	def identify_covergence(self, regex_pats_and_conditions:dict=RE_PATS_AND_CONDITIONS):
 		# Process on the copy instead of the original dataframe. 
 		df_identify_convergence = self.df.copy() 
+		
 		# Gather matched column names. 
 		cols = ["ticker", "factor"] 
 
 		# Identify convergence. If all the required conditions for 
 		# specific metrics are fulfilled, we will assume convergence. 
-		for regex_pat, condition in regex_pats_n_conditions.items(): 
+		for regex_pat, condition in regex_pats_and_conditions.items(): 
 			# Get the columns that matches the regex. 
 			cols_matched = [c for c in df_identify_convergence.columns if re.match(f"\\w+{regex_pat}", c)] 
 			cols.extend(cols_matched) 
