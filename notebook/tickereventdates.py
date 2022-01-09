@@ -31,7 +31,7 @@ class TickerEventDates(DataSet):
 	def __init__(self, 
 				use_csv=False, 
 				file_name="sector_price_history_processed_stg_1.csv"):
-		self.tickers = TickerSet(use_csv=True)
+		self.tickerset = TickerSet(use_csv=True)
 		print("Loading Event Dates" )
 		self.event_dates = EventDates()
 		print("Loading Economic Reporting Dates From CSV" )
@@ -47,12 +47,12 @@ class TickerEventDates(DataSet):
 			# Default to 0. 
 			df_tickers[event_name] = 0 
 			# Filter non economic report dates and assign 1. 
-			boo_dates = df_tickers["date"].isin(df_event_dates[event_name].values) 
+			boo_dates = df_tickers["Date"].isin(df_event_dates[event_name].values) 
 			df_tickers.loc[boo_dates, event_name] = 1 
 		return df_tickers
 
 	def get_df_with_date_flags(self):
 		'''Runs processing steps to add event flags to ticker data for each of the two event datas '''
-		df_event_dates = self.add_event_flags(self.tickers.get_processed(), self.event_dates.df)
+		df_event_dates = self.add_event_flags(self.tickerset.df, self.event_dates.df)
 		df_all_dates = self.add_event_flags(df_event_dates, self.ecomonic_reported_dates.df)
 		return df_all_dates
