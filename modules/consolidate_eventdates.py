@@ -58,9 +58,6 @@ class ConsolidateDates(ManageDataset):
 		print("Loading Event Dates" )
 		self.event_dates = GetEventDates() 
 
-		print("Loading Economic Reporting Dates From CSV")
-		self.ecomonic_reported_dates = ManageDataset("economic_reported_date.csv")
-
 		print("Loading News Headlines From CSV") 
 		self.news_headlines = ProcessNewsData() 
 
@@ -114,8 +111,6 @@ class ConsolidateDates(ManageDataset):
 
 	def get_df_with_date_flags(self):
 		'''Runs processing steps to add event flags to ticker data for each of the two event datas.'''
-
 		df_consolidated_dates = self.add_event_flags(self.tickers.df, self.event_dates.df) 
-		df_consolidated_dates = self.add_event_flags(df_consolidated_dates, self.ecomonic_reported_dates.df) 
 		df_consolidated_dates = self.add_news_flags(df_consolidated_dates, self.news_headlines.df, self.news_headlines.headline_keywords) 
 		return df_consolidated_dates
