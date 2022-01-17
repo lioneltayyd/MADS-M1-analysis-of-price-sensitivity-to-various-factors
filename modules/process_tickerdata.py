@@ -53,5 +53,5 @@ class ProcessTickerData(ManageDataset):
 		df.columns = [c.lower() for c in df.columns] 
 		
 		# Join with an history from Implied Volatility Index ticker. 
-		df_with_vix = df.merge(right=GetImpVolatility().vix_history, how="left", left_on="date", right_on="date", validate="many_to_one") 
+		df_with_vix = df.merge(right=GetImpVolatility().get_processed(), how="left", left_on="date", right_on="date", validate="many_to_one") 
 		return df_with_vix 
