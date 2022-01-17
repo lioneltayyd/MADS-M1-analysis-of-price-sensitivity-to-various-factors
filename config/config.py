@@ -31,7 +31,7 @@ NEWS_KEYWORDS_MAPPING = {
 	"news_fed": ["federal", "fed reserve", "federal reserve"], 
 	"news_earnings": ["earnings", "earnings announcement", "earnings report"], 
 	"news_interest_rate": ["interest rate"], 
-	"news_rate_hikes": ['rate hikes'] 
+	"news_rate_hikes": ["rate hikes"]  
 }
 
 METRICS_OPTIONS = [ 
