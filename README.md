@@ -16,6 +16,7 @@ XLI | Industrial.
 XLB | Basic materials.
 XTL | Telecomm.
 XLU | Utilities.
+XLE | Energy.
 
 --- 
 

@@ -167,10 +167,10 @@ class GetImpVolatility(GetTickerData):
 		'''Compute tscore to measure price change magnitude.'''
 
 		# Compute the t-score for VIX. 
-		price_chg_c2c_rollavg = df["vix_chg_c2c"].rolling(window=360, min_periods=360, win_type=None).mean() 
+		vix_chg_c2c_rollavg = df["vix_chg_c2c"].rolling(window=360, min_periods=360, win_type=None).mean() 
 
-		price_chg_c2c_rollstd = df["vix_chg_c2c"].rolling(window=360, min_periods=360, win_type=None).std(ddof=0) 
+		vix_chg_c2c_rollavg = df["vix_chg_c2c"].rolling(window=360, min_periods=360, win_type=None).std(ddof=0) 
 
-		df["vix_tscore_c2c"] = (df["vix_chg_c2c"] - price_chg_c2c_rollavg) / price_chg_c2c_rollstd 
+		df["vix_tscore_c2c"] = (df["vix_chg_c2c"] - vix_chg_c2c_rollavg) / vix_chg_c2c_rollavg 
 
 		return df

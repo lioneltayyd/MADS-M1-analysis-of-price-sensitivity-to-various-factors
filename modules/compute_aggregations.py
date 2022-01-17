@@ -45,7 +45,7 @@ class AggregateMeasures(ManageDataset):
 		ManageDataset.__init__(self, file_name, use_csv)
 
 
-	def get_aggregation(self, dict_intent_measure):
+	def get_aggregation(self, dict_intent_measure:dict):
 		df_tickers =  self.ticker_event_dates.df
 		# An empty dataframe to consolidate all the aggregates for 
 		# different metrics. 
@@ -73,7 +73,7 @@ class AggregateMeasures(ManageDataset):
 					aggvalue_name = metric
 
 					# Define the positive threshold for probability count. 
-					prob_threshold = 0  
+					prob_threshold = 0 
 
 					# An empty dataframe to consolidate all the pivot tables. 
 					df_aggregates = pd.DataFrame() 
@@ -115,7 +115,7 @@ class AggregateMeasures(ManageDataset):
 						.reset_index(drop=False) \
 						.melt(id_vars="ticker", var_name="factor", value_vars=df_aggregates.columns, value_name=aggvalue_name) 
 
-					# Rename the metric name. Example (zscore_c2c) will be (zscore_c2c_mag) or 
+					# Rename the metric name. Example (tscore_c2c) will be (tscore_c2c_mag) or 
 					# (price_chg_c2o) will be (price_chg_c2o_dir). 
 					metric_newname = f"{metric}_{intent_measure}_{measure_event_period}" 
 					df_aggregates = df_aggregates.rename(mapper={metric: metric_newname}, axis="columns") 
@@ -131,9 +131,6 @@ class AggregateMeasures(ManageDataset):
 					# Compute the value difference between occurring event and non-occuring event. 
 					df_consolidated_agg[f"{metric}_{intent_measure}_diff"] = \
 						df_consolidated_agg[f"{metric}_{intent_measure}_1"] - df_consolidated_agg[f"{metric}_{intent_measure}_0"] 
-
-				# For clearing the warning output. The warning is not important. 
-				#clear_output() 
 
 		# Add new columns for tickers and factors. 
 		df_consolidated_agg["ticker"] = arr_tickers 

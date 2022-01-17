@@ -1,3 +1,5 @@
+import datetime as dt
+
 # -------------------------------------------------------
 # General config 
 # -------------------------------------------------------
@@ -18,9 +20,9 @@ TICKER_TO_COLLECT = [
 # Define the filename to collect the event dates. 
 EVENTS_FILENAMES = [
 	"observance_dates_ext.csv", 
-	"firsttrdrday_ofmonth.csv", 
 	"santa_rally.csv", 
 	"triple_witching_week.csv", 
+	"economic_reported_date", 
 ]
 
 # Identify the list of keywords. We can add as many relevant keywords here as we want. 
@@ -39,21 +41,28 @@ METRICS_OPTIONS = [
 ]
 
 INTENT_MEASURES = {
-	"dir": {
+	"dir": set([
 		"price_chg_c2o", "price_chg_o2c", "price_chg_c2c", 
 		"volume_pchg_from_med", 
-	}, 
-	"mag": {
+	]), 
+	"mag": set([
 		"price_chg_c2o", "price_chg_o2c", "price_chg_c2c", 
 		"tscore_bo", "tscore_c2o", "tscore_o2c", "tscore_c2c", 
-	}, 
-	"avg": {
 		"vix_chg_c2c", "vix_tscore_c2c", 
-	}
+	]), 
+	"avg": set([
+
+	]), 
 } 
 
 RE_PATS_AND_CONDITIONS = {
-	"_dir_\\d": 0.7,
+	"_dir_\\d": 0.7, 
 	"_mag_\\d": 0.9, 
-	"_avg_\\d": 2.0, 
+	"_avg_\\d": 0.5, 
+}
+
+RECESSIONS = {
+	"recession"	: ["Covid 2019", "DebtCrisis 2008", "DotCom 2001"], 
+	"date_start": ["2020-02-01", "2007-11-01", "2001-03-01"], 
+	"date_end"	: ["2020-04-01", "2009-06-01", "2001-11-01"], 
 }
