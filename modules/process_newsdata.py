@@ -12,52 +12,43 @@ from config.config import NEWS_KEYWORDS_MAPPING
 
 
 # %%
-class ProcessNewsData(ManageDataset):
-	'''
-	A ManageDataset specific to holding dates of observances and events. 
-	Leverages Lionel's custom data CSVs which have a column per event and rows as dates of each event. 
-	'''
+class ProcessNewsData(ManageDataset):	
+	def __init__(self, use_csv: bool = False, file_name: str = "news_headline_keywords.csv") -> None:
+		
+		self.topic_keywords = NEWS_KEYWORDS_MAPPING
+		self.topics = list(self.topic_keywords.keys())
 
-	def __init__(self, use_csv:bool=False, file_name:str="news_headline_keywords.csv") -> None: 
-		self.df = ManageDataset("raw_partner_headlines.csv").df 
-		self.headline_keywords = self.get_processed() 
+		if use_csv == False:
+			self.articles = ManageDataset("raw_partner_headlines.csv").df
+			print("Transforing to EventsDate Format")
+			self.df = self.get_event_dates()
+		ManageDataset.__init__(self, file_name, use_csv)
+		return
 
-	
-	def get_processed(self):
-		'''Runs the processing functions.'''
+	def get_event_dates(self):
+		matching_headline_dfs = {}
+		for topic in self.topics:
+			matching_headline_dfs[topic] = self.get_dates(self.topic_keywords[topic], self.articles)
 
-		processed_data = self.process_dates(self.df) 
-		processed_data = self.extract_keywords(processed_data) 
+		combined_df = pd.concat(list(matching_headline_dfs.values()),
+								keys=list(matching_headline_dfs.keys()),
+								axis=1)
+		return combined_df
 
-		return processed_data 
+	def get_dates(self,keywords, df):
+		match_indicator = self.get_key_word_match_indicator(keywords, df)
+		matches = match_indicator[match_indicator == True]
+		dates = pd.concat([matches, df['date']], axis=1,
+							join='inner')['date'].str[:-9]
+		return dates
 
+	def get_key_word_match_indicator(self,keywords, df):
+		# Combine the keywords into a regex pattern.
+		re_pattern = f"""({"|".join(keywords)})"""
+		# extract matches
+		matches = df\
+			.loc[:, "headline"]\
+				.str.findall(re_pattern, flags=re.IGNORECASE)
 
-	def process_dates(self, df_news:pd.DataFrame): 
-		# Remove the time part since we can't manipulate or do anything with it. 
-		# Example: (2020-06-01 00:00:00) to (2020-06-01). 
-		df_news["date"] = df_news["date"].str[:-9] 
-		return df_news
-
-
-	def extract_keywords(self, df_news:pd.DataFrame, keyword_mapping:dict=NEWS_KEYWORDS_MAPPING): 
-		headline_keywords = [t for _, terms in keyword_mapping.items() for t in terms] 
-
-		# Combine the keywords into a regex pattern. 
-		re_pattern = f"""({"|".join(headline_keywords)})""" 
-
-		# Extract the keywords based the regex patterns and indicate the occurance with binary value. 
-		headline_keywords = df_news.loc[:, "headline"].str.findall(re_pattern, flags=re.IGNORECASE) 
-
-		# Split the list of elements into multiple columns. 
-		headline_keywords = pd.DataFrame(headline_keywords.to_list()) 
-
-		# Lowercase the str. 
-		headline_keywords = headline_keywords.apply(lambda x: x.str.lower(), axis=0) 
-
-		# Map similar keywords into a single keyword. Example (FFR) and (Fed Fund) share 
-		# the same meaning, hence (Fed Fund) should be converted to (FFR) and counted as 
-		# a single keyword to avoid duplicates. 
-		keyword_mapping = {t: k for k, terms in keyword_mapping.items() for t in terms} 
-		headline_keywords = headline_keywords.apply(lambda x: x.map(keyword_mapping, na_action="ignore"), axis=0) 
-
-		return headline_keywords
+		match_indicator = matches.str.len() > 0
+		return match_indicator
