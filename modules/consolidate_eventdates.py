@@ -58,15 +58,16 @@ class ConsolidateDates(ManageDataset):
 		print("Loading Event Dates" )
 		self.event_dates = GetEventDates() 
 
-		print("Loading News Headlines From CSV") 
-		self.news_headlines = ProcessNewsData() 
-
 		if use_csv == False:
 			print("Adding Event Flag columns to ticker history") 
 			self.df = self.get_df_with_date_flags() 
 
 		ManageDataset.__init__(self, file_name, use_csv) 
 
+	def get_df_with_date_flags(self):
+		'''Runs processing steps to add event flags to ticker data for each of the two event datas.'''
+		df_consolidated_dates = self.add_event_flags(self.tickers.df, self.event_dates.df) 
+		return df_consolidated_dates
 
 	def add_event_flags(self, df_tickers, df_event_dates):
 		'''Adds boolean as integer columns for each event according to matching rows in ticker data.'''
@@ -82,35 +83,5 @@ class ConsolidateDates(ManageDataset):
 
 		return df_tickers 
 
-	
-	def add_news_flags(self, df_tickers:pd.DataFrame, df_news:pd.DataFrame, headline_keywords:pd.DataFrame): 
-		'''Adds boolean as integer columns for each headline keyword according to matching rows in ticker data.'''
-
-		self.news_headline_keywords = set()
-
-		for col in headline_keywords.columns: 
-			# Merge (headline_keywords) series with the (df_news) dataframe. 
-			df_reported_dates = df_news.merge(right=headline_keywords[col], how="left", left_index=True, right_index=True) 
-
-			# Convert into long table. 
-			df_reported_dates = df_reported_dates \
-				.pivot(columns=col, values="date").iloc[:, 1:] \
-				.dropna(how="all") 
-
-			# Store unique headline keywords. 
-			self.news_headline_keywords.update(df_reported_dates.columns.to_list())  
-
-			# Add a flag for each news reporting date. 
-			df_tickers = self.add_event_flags(df_tickers, df_reported_dates) 
-
-		# Convert set into list object to make it convenient to concat with other list object. 
-		self.news_headline_keywords = list(self.news_headline_keywords) 
-
-		return df_tickers 
 
 
-	def get_df_with_date_flags(self):
-		'''Runs processing steps to add event flags to ticker data for each of the two event datas.'''
-		df_consolidated_dates = self.add_event_flags(self.tickers.df, self.event_dates.df) 
-		df_consolidated_dates = self.add_news_flags(df_consolidated_dates, self.news_headlines.df, self.news_headlines.headline_keywords) 
-		return df_consolidated_dates
