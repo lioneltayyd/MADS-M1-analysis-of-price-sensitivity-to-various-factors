@@ -32,8 +32,7 @@ class AggregateMeasures(ManageDataset):
 			self.ticker_event_dates = ticker_event_dates
 
 		#The full list of factors/ events from the source data 
-		self.factors = self.ticker_event_dates.event_dates.column_list \
-			+ self.ticker_event_dates.news_headline_keywords
+		self.factors = self.ticker_event_dates.event_dates.column_list 
 
 		#If not using csv Set the df attribute through applyng the aggregation to the source data 
 		if use_csv == False:
