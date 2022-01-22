@@ -132,45 +132,43 @@ class GetTickerData():
 		df["tscore_o2c"] = (df["price_chg_o2c"] - price_chg_o2c_rollavg) / price_chg_o2c_rollstd 
 		df["tscore_c2c"] = (df["price_chg_c2c"] - price_chg_c2c_rollavg) / price_chg_c2c_rollstd 
 
-		return df 
+		return df
 
-
-# %%
 class GetImpVolatility(GetTickerData):
 	'''Extends Ticker with modifications specific to the Implied Volatility Index'''
 
 	def __init__(self): 
 		GetTickerData.__init__(self, ticker_name="^VIX") 
-		self.vix_history = self.compute_vix_chg_tscore(self.get_vix_history()) 
-
-
-	def get_vix_history(self): 
-		'''Renames open and close measures and adds new measures for distance from threshold''' 
-
-		base_columns = ["open", "close"] 
-		renamed_columns = [f"vix_{column}".lower() for column in base_columns] 
-
-		# Filter and rename columns. 
-		vix = self.get_history()[base_columns] 
-		vix.columns = renamed_columns 
-
-		# Convert index name to lowercase. 
-		vix.index.name = vix.index.name.lower() 
-
-		# Compute VIX change between the previous and current day close. 
-		vix.loc[:, "vix_chg_c2c"] = vix["vix_close"].pct_change(1) 
-
-		return vix
 	
-	
-	def compute_vix_chg_tscore(self, df:pd.DataFrame): 
-		'''Compute tscore to measure price change magnitude.'''
+	def get_processed(self):
+		'''Runs modified, minimal processing gor VIX'''
+		ticker_data = self.get_history()
+		processed_data = self.compute_price_change(ticker_data)
+		processed_data = self.compute_price_chg_tscore(processed_data)
+		processed_data = self.add_vix_prefix_to_columns(processed_data)
 
-		# Compute the t-score for VIX. 
-		vix_chg_c2c_rollavg = df["vix_chg_c2c"].rolling(window=360, min_periods=360, win_type=None).mean() 
-
-		vix_chg_c2c_rollavg = df["vix_chg_c2c"].rolling(window=360, min_periods=360, win_type=None).std(ddof=0) 
-
-		df["vix_tscore_c2c"] = (df["vix_chg_c2c"] - vix_chg_c2c_rollavg) / vix_chg_c2c_rollavg 
-
+		return processed_data
+	def compute_price_change(sef, df:pd.DataFrame):
+		#price_chg_close_to_close
+		df["chg_c2c"] = df["close"].pct_change(1) 
 		return df
+	
+	def compute_price_chg_tscore(sef, df:pd.DataFrame):
+		# Compute the t-score for VIX. 
+		vix_chg_c2c_rollavg = df["chg_c2c"].rolling(window=360, min_periods=360, win_type=None).mean() 
+		vix_chg_c2c_rollavg = df["chg_c2c"].rolling(window=360, min_periods=360, win_type=None).std(ddof=0) 
+		df["tscore_c2c"] = (df["chg_c2c"] - vix_chg_c2c_rollavg) / vix_chg_c2c_rollavg 
+		return df
+
+	def add_vix_prefix_to_columns(self,df:pd.DataFrame):
+		base_columns = ["open", "close", 'chg_c2c', 'tscore_c2c']
+		renamed_columns = [f"vix_{column}".lower() for column in base_columns] 
+		vix = df[base_columns]
+		vix.columns = renamed_columns
+		# Convert index name to lowercase. 
+		vix.index.name = vix.index.name.lower()
+		return vix  
+
+
+# %%
+
