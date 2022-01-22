@@ -22,7 +22,7 @@ EVENTS_FILENAMES = [
 	"observance_dates_ext.csv", 
 	"santa_rally.csv", 
 	"triple_witching_week.csv", 
-	"economic_reported_date", 
+	"economic_reported_date.csv", 
 ]
 
 # Identify the list of keywords. We can add as many relevant keywords here as we want. 
@@ -31,7 +31,7 @@ NEWS_KEYWORDS_MAPPING = {
 	"news_fed": ["federal", "fed reserve", "federal reserve"], 
 	"news_earnings": ["earnings", "earnings announcement", "earnings report"], 
 	"news_interest_rate": ["interest rate"], 
-	"news_rate_hikes": ["rate hikes"]  
+	"news_rate_hikes": ["rate hikes"] 
 }
 
 METRICS_OPTIONS = [ 
