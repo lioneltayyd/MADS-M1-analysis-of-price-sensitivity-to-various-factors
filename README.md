@@ -39,12 +39,6 @@ explore_visualisation | Just for visualisation exploration.
 
 --- 
 
-## __Processing Workflow & Workload Distribution Diagram__
-
-You can access `processing_flowchart.html` inside the `docs` folder to view the diagrams. There are 2 pages in total. 
-
---- 
-
 ## __Guide On Initial Setup__
 
 1.  Clone the repo to your directory and create a new branch. 
@@ -82,3 +76,17 @@ You can access `processing_flowchart.html` inside the `docs` folder to view the 
     ```bash
     pipenv shell && pipenv sync; 
     ```
+
+--- 
+
+## __Processing Workflow & Workload Distribution Diagram__
+
+You can access `processing_flowchart.html` inside the `docs` folder to view the diagrams. There are 2 pages in total. 
+
+Processing Workflow: 
+
+![processing_flowchart](docs/processing_workflow.png) 
+
+Workload Distribution: 
+
+![workload_distribution](docs/workload_distribution.png) 
