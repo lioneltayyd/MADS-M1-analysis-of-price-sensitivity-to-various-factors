@@ -6,13 +6,12 @@
 DATASET_DIR = "dataset" 
 
 # Define th starting and ending date when collecting the ticker data. 
-TICKER_DATE_COLLECT = "1998-12-01", "2021-12-17" 
+TICKER_DATE_COLLECT = "2007-11-30", "2021-12-17" 
 
 # Define the list of tickers we are interested to investigate on. 
 TICKER_TO_COLLECT = [
 	"XLF", "XHB", "XLK", "XLY", "XLP", 
-	"XRT", "XLI", "XLB", "XTL", "XLU", 
-	"XLE", 
+	"XRT", "XLI", "XLB", "XLU", "XLE", 
 ] 
 
 # Define the filename to collect the event dates. 
@@ -33,33 +32,44 @@ NEWS_KEYWORDS_MAPPING = {
 	"news_rate_hikes": ["rate hikes"] 
 }
 
+# List of metrics to explore with. 
 METRICS_OPTIONS = [ 
 	"price_chg_c2o", "price_chg_o2c", "price_chg_c2c", "vix_chg_c2c", 
 	"volume_diff_to_med", "volume_pchg_from_med", 
-	"tscore_bo", "tscore_c2o", "tscore_o2c", "tscore_c2c", "vix_tscore_c2c", 
+	"tscore_c2o", "tscore_o2c", "tscore_c2c", "vix_tscore_c2c", 
 ]
 
+# Map the metrics to the intended processing step for analysis. 
+# dir = Compute the probability of exceeding a specific threshold. 
+# abv = Compute the probability of exceeeding above the specified threshold. 
+# mag = Compute the magnitude. Ignore direction. 
+# avg = Compute the average value. 
 INTENT_MEASURES = {
 	"dir": set([
 		"price_chg_c2o", "price_chg_o2c", "price_chg_c2c", 
+	]), 
+	"abv": set([
 		"volume_pchg_from_med", 
 	]), 
 	"mag": set([
-		"price_chg_c2o", "price_chg_o2c", "price_chg_c2c", 
-		"tscore_bo", "tscore_c2o", "tscore_o2c", "tscore_c2c", 
-		"vix_chg_c2c", "vix_tscore_c2c", 
+		"price_chg_c2o", "price_chg_o2c", "price_chg_c2c", "vix_chg_c2c", 
+		"tscore_c2o", "tscore_o2c", "tscore_c2c", "vix_tscore_c2c", 
 	]), 
 	"avg": set([
 
 	]), 
 } 
 
+# Set the conditioons or thresholds for each intended processing step. 
+# The following keys will be used as a regex pattern to process the data. 
 RE_PATS_AND_CONDITIONS = {
 	"_dir_\\d": 0.7, 
+	"_abv_\\d": 0.7, 
 	"_mag_\\d": 0.9, 
 	"_avg_\\d": 0.5, 
 }
 
+# Recession data. To be parsed into Pandas DataFrame. 
 RECESSIONS = {
 	"recession"	: ["Covid 2019", "DebtCrisis 2008", "DotCom 2001"], 
 	"date_start": ["2020-02-01", "2007-11-01", "2001-03-01"], 

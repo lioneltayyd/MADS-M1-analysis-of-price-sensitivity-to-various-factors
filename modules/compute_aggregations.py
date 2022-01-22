@@ -64,11 +64,8 @@ class AggregateMeasures(ManageDataset):
 					# Define the variable to assign as the pivot value. 
 					pivot_value = metric
 
-					# Define the aggregate function. 
-					aggfunc = np.mean
-
-					# Define the name for the aggregated value. 
-					aggvalue_name = metric
+					# Define the the aggregate function and the name for the aggregated value. 
+					aggvalue_name, aggfunc = metric, np.mean 
 
 					# Define the positive threshold for probability count. 
 					prob_threshold = 0 
@@ -88,7 +85,7 @@ class AggregateMeasures(ManageDataset):
 
 						# To compute directional probabilities, we need to conver the negatives to 0 
 						# and positives to 1 before aggregating it with the mean. 
-						if intent_measure == "dir": 
+						if intent_measure in ["dir", "abv"]: 
 							df_processed.loc[df_processed[pivot_value] <= prob_threshold, pivot_value] = 0 
 							df_processed.loc[df_processed[pivot_value] >  prob_threshold, pivot_value] = 1 
 
@@ -130,7 +127,7 @@ class AggregateMeasures(ManageDataset):
 					df_consolidated_agg[f"{metric}_{intent_measure}_diff"] = \
 						df_consolidated_agg[f"{metric}_{intent_measure}_1"] - df_consolidated_agg[f"{metric}_{intent_measure}_0"] 
 
-		# Add new columns for tickers and factors. 
+		# Add new columns for tickers and factors since the pivot table doesn't contain these columns. 
 		df_consolidated_agg["ticker"] = arr_tickers 
 		df_consolidated_agg["factor"] = arr_factors 
 
@@ -159,11 +156,15 @@ class AggregateMeasures(ManageDataset):
 					df_identify_convergence.loc[df_identify_convergence[c] <  condition, c] = 0 
 					df_identify_convergence.loc[df_identify_convergence[c] >= condition, c] = 1 
 
+				elif regex_pat == "_abv_\\d": 
+					boo_abv_threshold = df_identify_convergence[c] >= condition
+					df_identify_convergence.loc[:, c] = 0 
+					df_identify_convergence.loc[boo_abv_threshold, c] = 1 
+
 				elif regex_pat == "_dir_\\d": 
-					boo_neutral = (df_identify_convergence[c] >= (1 - condition)) & (df_identify_convergence[c] <= condition)
-					df_identify_convergence.loc[boo_neutral, c] = 0 
-					df_identify_convergence.loc[df_identify_convergence[c] <= (1 - condition), c] = 1 
-					df_identify_convergence.loc[df_identify_convergence[c] >= condition, c] = 1 
+					boo_exceed_threshold = (df_identify_convergence[c] <= (1 - condition)) | (df_identify_convergence[c] >= condition)
+					df_identify_convergence.loc[:, c] = 0 
+					df_identify_convergence.loc[boo_exceed_threshold, c] = 1 
 
 		# Filter columns. 
 		df_identify_convergence = df_identify_convergence[cols] 

@@ -29,7 +29,6 @@ class GetTickerData():
 		ticker_data = self.get_history() 
 		processed_data = self.compute_price_change(ticker_data) 
 		processed_data = self.compute_rolling_volume(processed_data) 
-		processed_data = self.compute_bollinger(processed_data) 
 		processed_data = self.compute_price_chg_tscore(processed_data) 
 
 		return processed_data
@@ -56,9 +55,10 @@ class GetTickerData():
 		3. Daily price change. Difference between previous day and current day closing price.
 		'''
 
-		# 1. price_chg_close_to_open
-		prev_close = df["close"].shift(1) 
-		df["price_chg_c2o"] = (df["open"] - prev_close) / prev_close 
+		# 1. price_chg_close_to_open 
+		# Measure the change using the following day open price after the event has occured. 
+		next_open = df["open"].shift(-1) 
+		df["price_chg_c2o"] = (next_open - df["close"]) / df["close"] 
 
 		# 2. price_chg_open_to_close
 		df["price_chg_o2c"] = (df["close"] - df["open"]) / df["open"] 
@@ -86,35 +86,6 @@ class GetTickerData():
 
 		return df
 
-	
-	def compute_bollinger(self, df:pd.DataFrame):
-		'''
-		Compute Bollinger Band and Bollinger tscore to measure price change magnitude. 
-		'''
-
-		# Refer to this link to understand what Bollinger Band is and its formula. 
-		# https://www.investopedia.com/terms/b/bollingerbands.asp
-
-		# We will use 360 days for the rolling window. If the window is too short, 
-		# the average price could fluctuate higher or lower. We can't use median 
-		# because we need to calculate t-score. 
-
-		# Compute the rolling average and standard deviation. 
-		tp =  (df["close"] + df["low"] + df["high"]) / 3 
-		tp_rollavg = tp.rolling(window=360, min_periods=360, win_type=None).mean() 
-		tp_rollstd = tp.rolling(window=360, min_periods=360, win_type=None).std(ddof=0) 
-
-
-		# Compute Bollinger Band. 
-		n_std = 2 
-		df["bo_upper"] = tp_rollavg + (n_std * tp_rollstd) 
-		df["bo_lower"] = tp_rollavg - (n_std * tp_rollstd) 
-
-		# Compute the z-score using closing price and Bollinger Band. 
-		df["tscore_bo"] = (df["close"] - tp_rollavg) / tp_rollstd 
-
-		return df 
-
 
 	def compute_price_chg_tscore(self, df:pd.DataFrame): 
 		'''Compute tscore to measure price change magnitude.'''
@@ -124,9 +95,9 @@ class GetTickerData():
 		price_chg_o2c_rollavg = df["price_chg_o2c"].rolling(window=360, min_periods=360, win_type=None).mean() 
 		price_chg_c2c_rollavg = df["price_chg_c2c"].rolling(window=360, min_periods=360, win_type=None).mean() 
 
-		price_chg_c2o_rollstd = df["price_chg_c2o"].rolling(window=360, min_periods=360, win_type=None).std(ddof=0) 
-		price_chg_o2c_rollstd = df["price_chg_o2c"].rolling(window=360, min_periods=360, win_type=None).std(ddof=0) 
-		price_chg_c2c_rollstd = df["price_chg_c2c"].rolling(window=360, min_periods=360, win_type=None).std(ddof=0) 
+		price_chg_c2o_rollstd = df["price_chg_c2o"].rolling(window=360, min_periods=360, win_type=None).std(ddof=1) 
+		price_chg_o2c_rollstd = df["price_chg_o2c"].rolling(window=360, min_periods=360, win_type=None).std(ddof=1) 
+		price_chg_c2c_rollstd = df["price_chg_c2c"].rolling(window=360, min_periods=360, win_type=None).std(ddof=1) 
 
 		df["tscore_c2o"] = (df["price_chg_c2o"] - price_chg_c2o_rollavg) / price_chg_c2o_rollstd 
 		df["tscore_o2c"] = (df["price_chg_o2c"] - price_chg_o2c_rollavg) / price_chg_o2c_rollstd 
@@ -159,7 +130,7 @@ class GetImpVolatility(GetTickerData):
 	def compute_vix_chg_tscore(self, df:pd.DataFrame):
 		# Compute the t-score for VIX. 
 		vix_chg_c2c_rollavg = df["chg_c2c"].rolling(window=360, min_periods=360, win_type=None).mean() 
-		vix_chg_c2c_rollavg = df["chg_c2c"].rolling(window=360, min_periods=360, win_type=None).std(ddof=0) 
+		vix_chg_c2c_rollavg = df["chg_c2c"].rolling(window=360, min_periods=360, win_type=None).std(ddof=1) 
 		df["tscore_c2c"] = (df["chg_c2c"] - vix_chg_c2c_rollavg) / vix_chg_c2c_rollavg 
 		return df
 
