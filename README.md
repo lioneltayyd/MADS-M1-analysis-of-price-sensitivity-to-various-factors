@@ -14,7 +14,6 @@ XLP | Staple.
 XRT | Retail.
 XLI | Industrial.
 XLB | Basic materials.
-XTL | Telecomm.
 XLU | Utilities.
 XLE | Energy.
 
@@ -24,7 +23,18 @@ XLE | Energy.
 
 Folder Name | Description
 --- | ---
+config | For parameter configuration. 
+modules | Contain all the custom classes and functions. 
+notebook | Contain all the data processing steps and visualisation. 
 pipfile | For setting up the `pipenv` and tracking all the installed dependencies. 
+
+---
+
+## __Notebook Content__
+
+Notebook Name | Description
+processing_steps | Contain the step by step processing workflow before organising them into classes & functions. 
+explore_visualisation | Just for visualisation exploration. 
 
 --- 
 
@@ -34,7 +44,7 @@ pipfile | For setting up the `pipenv` and tracking all the installed dependencie
 
     ```
     git clone https://github.com/lioneltayyd/MADS-M1-analysis-of-price-sensitivity-to-various-factors.git; 
-    git checkout -b dev-brendan; 
+    git checkout -b dev-name; 
     git add .; 
     git commit -m "Initiate a new branch."; 
     git push origin; 
