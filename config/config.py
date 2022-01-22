@@ -22,7 +22,8 @@ EVENTS_FILENAMES = [
 	"observance_dates_ext.csv", 
 	"santa_rally.csv", 
 	"triple_witching_week.csv", 
-	"economic_reported_date.csv", 
+	"economic_reported_date.csv",
+	"news_headline_keywords.csv" 
 ]
 
 # Identify the list of keywords. We can add as many relevant keywords here as we want. 
