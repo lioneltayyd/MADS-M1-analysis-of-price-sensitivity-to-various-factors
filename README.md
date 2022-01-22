@@ -33,8 +33,15 @@ pipfile | For setting up the `pipenv` and tracking all the installed dependencie
 ## __Notebook Content__
 
 Notebook Name | Description
+--- | ---
 processing_steps | Contain the step by step processing workflow before organising them into classes & functions. 
 explore_visualisation | Just for visualisation exploration. 
+
+--- 
+
+## __Processing Workflow & Workload Distribution Diagram__
+
+You can access `processing_flowchart.html` inside the `docs` folder to view the diagrams. There are 2 pages in total. 
 
 --- 
 
