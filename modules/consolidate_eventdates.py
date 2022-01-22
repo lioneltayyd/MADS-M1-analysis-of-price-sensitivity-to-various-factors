@@ -26,12 +26,6 @@ class GetEventDates(ManageDataset):
 	def read_from_csv(self):
 		'''Overwrites default Dataset read opeartion to pull in the set of event data csvs'''
 
-		# I have identified the dates for each event using Julia (programming language) 
-		# previously and saved them in CSV. I own the Julia source code (belongs to me). 
-		# It is extremely cumbersome to calculate the date pattern in Python. 
-		# Inaccurate dates will occur starting from 2030. Plus, difficult to provide customised 
-		# date pattern. I haven't discover another library that can do that conveniently. 
-
 		df_event_dates = pd.DataFrame() 
 
 		# Read the data and consolidate all the event dates. 
@@ -49,6 +43,7 @@ class GetEventDates(ManageDataset):
 
 
 
+# %%
 class ConsolidateDates(ManageDataset):
 	'''ManageDataset specific to ticker time series data combined with event date data'''
 
@@ -64,12 +59,14 @@ class ConsolidateDates(ManageDataset):
 
 		ManageDataset.__init__(self, file_name, use_csv) 
 
+
 	def get_df_with_date_flags(self):
 		'''Runs processing steps to add event flags to ticker data for each of the two event datas.'''
 		df_consolidated_dates = self.add_event_flags(self.tickers.df, self.event_dates.df) 
 		return df_consolidated_dates
 
-	def add_event_flags(self, df_tickers, df_event_dates):
+
+	def add_event_flags(self, df_tickers:pd.DataFrame, df_event_dates:pd.DataFrame):
 		'''Adds boolean as integer columns for each event according to matching rows in ticker data.'''
 
 		for event_name in df_event_dates.columns: 
@@ -82,6 +79,3 @@ class ConsolidateDates(ManageDataset):
 			df_tickers.loc[boo_dates, event_name] = 1 
 
 		return df_tickers 
-
-
-
