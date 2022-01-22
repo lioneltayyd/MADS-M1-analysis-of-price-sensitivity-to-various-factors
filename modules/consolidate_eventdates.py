@@ -5,7 +5,6 @@ import pandas as pd
 # Custom modules. 
 from modules.manage_dataset import * 
 from modules.process_tickerdata import *
-from modules.process_newsdata import * 
 
 # Custom configuration.
 from config.config import EVENTS_FILENAMES

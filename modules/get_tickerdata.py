@@ -134,6 +134,9 @@ class GetTickerData():
 
 		return df
 
+
+
+# %%
 class GetImpVolatility(GetTickerData):
 	'''Extends Ticker with modifications specific to the Implied Volatility Index'''
 
