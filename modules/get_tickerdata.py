@@ -143,17 +143,17 @@ class GetImpVolatility(GetTickerData):
 	def get_processed(self):
 		'''Runs modified, minimal processing gor VIX'''
 		ticker_data = self.get_history()
-		processed_data = self.compute_price_change(ticker_data)
-		processed_data = self.compute_price_chg_tscore(processed_data)
+		processed_data = self.compute_vix_change(ticker_data)
+		processed_data = self.compute_vix_chg_tscore(processed_data)
 		processed_data = self.add_vix_prefix_to_columns(processed_data)
 
 		return processed_data
-	def compute_price_change(sef, df:pd.DataFrame):
+	def compute_vix_change(self, df:pd.DataFrame):
 		#price_chg_close_to_close
 		df["chg_c2c"] = df["close"].pct_change(1) 
 		return df
 	
-	def compute_price_chg_tscore(sef, df:pd.DataFrame):
+	def compute_vix_chg_tscore(self, df:pd.DataFrame):
 		# Compute the t-score for VIX. 
 		vix_chg_c2c_rollavg = df["chg_c2c"].rolling(window=360, min_periods=360, win_type=None).mean() 
 		vix_chg_c2c_rollavg = df["chg_c2c"].rolling(window=360, min_periods=360, win_type=None).std(ddof=0) 
@@ -168,7 +168,3 @@ class GetImpVolatility(GetTickerData):
 		# Convert index name to lowercase. 
 		vix.index.name = vix.index.name.lower()
 		return vix  
-
-
-# %%
-
