@@ -87,16 +87,16 @@ explore_visualisation | Just for visualisation exploration.
     to run the notebook. 
 
 --- 
-## __Required Datasource Download __
+## __Required Datasource Download__
 
 1.  A new directory called "dataset" should be created within the main project directlry.
-2.  The following csv files should be downloaded from kaggle and put in the dataset directory
-    [raw_partner_headlines.csv](https://www.kaggle.com/miguelaenlle/massive-stock-news-analysis-db-for-nlpbacktests?select=raw_partner_headlines.csv)
-    [observance_dates_ext.csv](https://www.kaggle.com/lioneltyd/economic-reporting-data-20072021?select=observance_dates_ext.csv)
-    [santa_rally.csv](https://www.kaggle.com/lioneltyd/economic-reporting-data-20072021?select=santa_rally.csv)
-    [triple_witching_week.csv](https://www.kaggle.com/lioneltyd/economic-reporting-data-20072021?select=triple_witching_week.csv)
+2.  The following csv files should be downloaded from kaggle and put in the dataset directory:
+    [raw_partner_headlines.csv](https://www.kaggle.com/miguelaenlle/massive-stock-news-analysis-db-for-nlpbacktests?select=raw_partner_headlines.csv),
+    [observance_dates_ext.csv](https://www.kaggle.com/lioneltyd/economic-reporting-data-20072021?select=observance_dates_ext.csv),
+    [santa_rally.csv](https://www.kaggle.com/lioneltyd/economic-reporting-data-20072021?select=santa_rally.csv),
+    [triple_witching_week.csv](https://www.kaggle.com/lioneltyd/economic-reporting-data-20072021?select=triple_witching_week.csv),
     [economic_reported_date.csv](https://www.kaggle.com/lioneltyd/economic-reporting-data-20072021?select=economic_reported_date.csv)
-    
+
 ---
 ## __Processing Workflow & Workload Distribution Diagram__
 
