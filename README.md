@@ -45,7 +45,8 @@ explore_visualisation | Just for visualisation exploration.
 
     ```
     git clone https://github.com/lioneltayyd/MADS-M1-analysis-of-price-sensitivity-to-various-factors.git; 
-    git checkout -b dev-name; 
+    git checkout -b dev-name;
+    cd MADS-M1-analysis-of-price-sensitivity-to-various-factors/; 
     git add .; 
     git commit -m "Initiate a new branch."; 
     git push origin; 
