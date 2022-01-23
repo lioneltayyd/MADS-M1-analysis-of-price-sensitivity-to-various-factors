@@ -77,6 +77,14 @@ explore_visualisation | Just for visualisation exploration.
     pipenv shell && pipenv sync; 
     ```
 
+1.  Install `Jupyter` extension on your VSCode or alternative IDE to enable running 
+    the notebook directly on your VSCode without installing `jupyter notebook`. 
+
+1.  For VSCode users, press CMD + SHIFT + P and type `Reload Window` to reload the window after installing
+    the python packages. Then repeat the previous step and type `Select Interpreter` to 
+    select the python interpreter `MADS-M1-analysis-of-price-sensitivity-to-various-factors` 
+    to run the notebook. 
+
 --- 
 
 ## __Processing Workflow & Workload Distribution Diagram__
