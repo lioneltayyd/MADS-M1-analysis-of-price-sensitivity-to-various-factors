@@ -34,7 +34,7 @@ pipfile | For setting up the `pipenv` and tracking all the installed dependencie
 
 Notebook Name | Description
 --- | ---
-processing_steps | Contain the step by step processing workflow before organising them into classes & functions. 
+preprocessing_steps | Contain the step by step processing workflow before organising them into classes & functions. 
 explore_visualisation | Just for visualisation exploration. 
 
 --- 

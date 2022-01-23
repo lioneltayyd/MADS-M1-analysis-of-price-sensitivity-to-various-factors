@@ -24,7 +24,7 @@ class AggregateMeasures(ManageDataset):
 			self, 
 			intent_measure:dict=INTENT_MEASURES, 
 			use_csv:bool=True, 
-			file_name:str="sector_price_history_processed_stg_3.csv",
+			filename:str="sector_price_history_processed_stg_3.csv",
 			ticker_event_dates=None 
 		):
 		
@@ -43,20 +43,20 @@ class AggregateMeasures(ManageDataset):
 			self.df = self.get_aggregation(intent_measure)
 		
 		#construct dataset. 
-		ManageDataset.__init__(self, file_name, use_csv)
+		ManageDataset.__init__(self, filename, use_csv)
 
 
-	def get_aggregation(self, dict_intent_measure:dict):
+	def get_aggregation(self, intent_measure:dict):
 		df_tickers =  self.ticker_event_dates.df
-		# An empty dataframe to consolidate all the aggregates for 
-		# different metrics. 
+		
+		# An empty dataframe to consolidate all the aggregates for different metrics. 
 		df_consolidated_agg = pd.DataFrame() 
 
 		# To store the ticker and factor values. 
 		arr_tickers, arr_factors = [], [] 
 
 		# Start consolidating the aggregates. This will take a while. 
-		for intent_measure, metrics in dict_intent_measure.items(): 
+		for intent_measure, metrics in intent_measure.items(): 
 
 			# Define what we want to measure. 
 			for metric in metrics: 
@@ -142,7 +142,7 @@ class AggregateMeasures(ManageDataset):
 
 	def identify_conditions(self, regex_pats_and_conditions:dict=RE_PATS_AND_CONDITIONS):
 		# Process on the copy instead of the original dataframe. 
-		df_identify_convergence = self.df.copy() 
+		df_identified_condition = self.df.copy() 
 		
 		# Gather matched column names. 
 		cols = ["ticker", "factor"] 
@@ -151,42 +151,50 @@ class AggregateMeasures(ManageDataset):
 		# specific metrics are fulfilled, we will assume convergence. 
 		for regex_pat, condition in regex_pats_and_conditions.items(): 
 			# Get the columns that matches the regex. 
-			cols_matched = [c for c in df_identify_convergence.columns if re.match(f"\\w+{regex_pat}", c)] 
+			cols_matched = [c for c in df_identified_condition.columns if re.match(f"\\w+{regex_pat}", c)] 
 			cols.extend(cols_matched) 
 
 			for c in cols_matched: 
 				if regex_pat in ["_mag_\\d", "_avg_\\d"]: 
-					df_identify_convergence.loc[df_identify_convergence[c] <  condition, c] = 0 
-					df_identify_convergence.loc[df_identify_convergence[c] >= condition, c] = 1 
+					df_identified_condition.loc[df_identified_condition[c] <  condition, c] = 0 
+					df_identified_condition.loc[df_identified_condition[c] >= condition, c] = 1 
 
 				elif regex_pat == "_abv_\\d": 
-					boo_abv_threshold = df_identify_convergence[c] >= condition
-					df_identify_convergence.loc[:, c] = 0 
-					df_identify_convergence.loc[boo_abv_threshold, c] = 1 
+					boo_abv_threshold = df_identified_condition[c] >= condition
+					df_identified_condition.loc[:, c] = 0 
+					df_identified_condition.loc[boo_abv_threshold, c] = 1 
 
 				elif regex_pat == "_dir_\\d": 
-					boo_exceed_threshold = (df_identify_convergence[c] <= (1 - condition)) | (df_identify_convergence[c] >= condition)
-					df_identify_convergence.loc[:, c] = 0 
-					df_identify_convergence.loc[boo_exceed_threshold, c] = 1 
+					boo_exceed_threshold = (df_identified_condition[c] <= (1 - condition)) | (df_identified_condition[c] >= condition)
+					df_identified_condition.loc[:, c] = 0 
+					df_identified_condition.loc[boo_exceed_threshold, c] = 1 
 
 		# Filter columns. 
-		df_identify_convergence = df_identify_convergence[cols] 
+		df_identified_condition = df_identified_condition[cols] 
 
-		return df_identify_convergence
+		return df_identified_condition
 
 
-	def identify_convergence(self, metric_choices:list=METRIC_CHOICES): 
-		df_identify_convergence = self.identify_conditions() 
+	def identify_convergence(
+		self, 
+		metrics_to_identify_convergence:list=METRICS_TO_IDENTIFY_CONVERGENCE, 
+		metric_choices:list=METRIC_CHOICES
+	): 
+
+		df_identified_condition = self.identify_conditions() 
 
 		cols = ["ticker", "factor"] + metric_choices 
 
 		# Set the conditions for identifying convergence. 
-		boo_conditions = (df_identify_convergence["ticker"].notnull()) 
-		for metric in METRICS_TO_IDENTIFY_CONVERGENCE:  
-			boo_conditions &= (df_identify_convergence[metric] == 1.0) 
+		boo_conditions = (df_identified_condition["ticker"].notnull()) 
+		for metric in metrics_to_identify_convergence: 
+			boo_conditions &= (df_identified_condition[metric] == 1.0) 
 
 		# Mark influential variables. 
-		df_identify_convergence.loc[:, "influential"] = 0
-		df_identify_convergence.loc[boo_conditions, "influential"] = 1
+		df_identified_condition.loc[:, "influential"] = 0
+		df_identified_condition.loc[boo_conditions, "influential"] = 1
 
-		return df_identify_convergence.loc[:, cols + ["influential"]], boo_conditions
+		# Filter columns. 
+		df_identified_convergence = df_identified_condition.loc[boo_conditions, cols + ["influential"]] 
+
+		return df_identified_convergence, df_identified_condition

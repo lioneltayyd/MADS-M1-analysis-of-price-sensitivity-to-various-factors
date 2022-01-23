@@ -46,9 +46,7 @@ class GetTickerData():
 
 	def compute_price_change(self, df:pd.DataFrame):
 		'''	
-		We will be computing 3 types of price difference. 2nd option is not a must but just 
-		want to compare the difference between open and closing market. 
-
+		We will be computing 3 types of price difference: 
 		1. Gapping / Close market price change. Difference between previous day 
 		   closing price and current day open price. 
 		2. Open market price change. Difference between current day open and closing price. 
@@ -74,8 +72,8 @@ class GetTickerData():
 		Compute the 3 months rolling median volume and the volume difference to the rolling median. 
 		'''
 
-		cols = ["volume"] 
-		df["volume_rollmed"] = df[cols].rolling(window=90, min_periods=90, win_type=None).median() 
+		# Compute the rolling median for volume over a specific window. 
+		df["volume_rollmed"] = df["volume"].rolling(window=90, min_periods=90, win_type=None).median() 
 
 		# Compute the difference between each volume with the 3 months rolling median volume. 
 		df["volume_diff_to_med"] = df["volume"] - df["volume_rollmed"] 
@@ -114,19 +112,22 @@ class GetImpVolatility(GetTickerData):
 	def __init__(self): 
 		GetTickerData.__init__(self, ticker_name="^VIX") 
 	
+	
 	def get_processed(self):
 		'''Runs modified, minimal processing gor VIX'''
 		ticker_data = self.get_history()
 		processed_data = self.compute_vix_change(ticker_data)
 		processed_data = self.compute_vix_chg_tscore(processed_data)
 		processed_data = self.add_vix_prefix_to_columns(processed_data)
-
 		return processed_data
+
+
 	def compute_vix_change(self, df:pd.DataFrame):
 		#price_chg_close_to_close
 		df["chg_c2c"] = df["close"].pct_change(1) 
 		return df
 	
+
 	def compute_vix_chg_tscore(self, df:pd.DataFrame):
 		# Compute the t-score for VIX. 
 		vix_chg_c2c_rollavg = df["chg_c2c"].rolling(window=360, min_periods=360, win_type=None).mean() 
@@ -134,11 +135,15 @@ class GetImpVolatility(GetTickerData):
 		df["tscore_c2c"] = (df["chg_c2c"] - vix_chg_c2c_rollavg) / vix_chg_c2c_rollavg 
 		return df
 
+
 	def add_vix_prefix_to_columns(self,df:pd.DataFrame):
-		base_columns = ["open", "close", 'chg_c2c', 'tscore_c2c']
-		renamed_columns = [f"vix_{column}".lower() for column in base_columns] 
+		base_columns = ["open", "close", "chg_c2c", "tscore_c2c"]
+
+		# Rename columns. 
 		vix = df[base_columns]
+		renamed_columns = [f"vix_{column}".lower() for column in base_columns] 
 		vix.columns = renamed_columns
+
 		# Convert index name to lowercase. 
 		vix.index.name = vix.index.name.lower()
 		return vix  

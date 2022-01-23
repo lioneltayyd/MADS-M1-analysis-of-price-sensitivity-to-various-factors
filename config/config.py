@@ -6,7 +6,7 @@
 DATASET_DIR = "dataset" 
 
 # Define th starting and ending date when collecting the ticker data. 
-TICKER_DATE_COLLECT = "2007-11-30", "2021-12-17" 
+TICKER_DATE_COLLECT = "1998-12-01", "2021-12-17" 
 
 # Define the list of tickers we are interested to investigate on. 
 TICKER_TO_COLLECT = [

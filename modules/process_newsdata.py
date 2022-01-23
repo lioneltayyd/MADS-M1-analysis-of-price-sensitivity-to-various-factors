@@ -13,30 +13,30 @@ from config.config import NEWS_KEYWORDS_MAPPING
 
 # %%
 class ProcessNewsData(ManageDataset):	
-	def __init__(self, use_csv:bool=False, file_name:str="news_headline_keywords.csv") -> None:
+	def __init__(self, use_csv:bool=False, filename:str="news_headline_keywords.csv") -> None:
 		
 		self.topic_keywords = NEWS_KEYWORDS_MAPPING
 		self.topics = list(self.topic_keywords.keys())
 
 		if use_csv == False:
 			self.articles = ManageDataset("raw_partner_headlines.csv").df
-			print("Transforing to EventsDate Format")
+			print("Transferring to EventsDate Format")
 			self.df = self.get_event_dates()
 
-		ManageDataset.__init__(self, file_name, use_csv)
+		ManageDataset.__init__(self, filename, use_csv)
 
 
 	def get_event_dates(self):
-		matching_headline_dfs = {
+		matching_headlines = {
 			topic: self.get_dates(self.topic_keywords[topic], self.articles) for topic in self.topics 
 		}
 
-		combined_df = pd.concat(
-			list(matching_headline_dfs.values()),
-			keys=list(matching_headline_dfs.keys()),
+		df_headline_keywords = pd.concat(
+			list(matching_headlines.values()),
+			keys=list(matching_headlines.keys()),
 			axis=1
 		)
-		return combined_df
+		return df_headline_keywords
 
 
 	def get_dates(self, keywords:dict, df:pd.DataFrame):

@@ -46,7 +46,7 @@ class GetEventDates(ManageDataset):
 class ConsolidateDates(ManageDataset):
 	'''ManageDataset specific to ticker time series data combined with event date data'''
 
-	def __init__(self, use_csv=False, file_name="sector_price_history_processed_stg_2.csv"): 
+	def __init__(self, use_csv=False, filename="sector_price_history_processed_stg_2.csv"): 
 		self.tickers = ProcessTickerData(use_csv=True)
 
 		print("Loading Event Dates" )
@@ -56,7 +56,7 @@ class ConsolidateDates(ManageDataset):
 			print("Adding Event Flag columns to ticker history") 
 			self.df = self.get_df_with_date_flags() 
 
-		ManageDataset.__init__(self, file_name, use_csv) 
+		ManageDataset.__init__(self, filename, use_csv) 
 
 
 	def get_df_with_date_flags(self):
@@ -70,8 +70,10 @@ class ConsolidateDates(ManageDataset):
 
 		for event_name in df_event_dates.columns: 
 			# Default to 0. 
-			if event_name not in df_tickers.columns: 
-				df_tickers[event_name] = 0 
+			df_tickers[event_name] = 0 
+
+			# Ensure the datetime is converted to str to be able to match dates. 
+			df_tickers["date"] = df_tickers["date"].astype(str) 
 			
 			# Filter non economic report dates and assign 1. 
 			boo_dates = df_tickers["date"].isin(df_event_dates[event_name].values) 

@@ -24,7 +24,7 @@ class ProcessTickerData(ManageDataset):
 		start_date:str=TICKER_DATE_COLLECT[0], 
 		end_date:str=TICKER_DATE_COLLECT[1], 
 		use_csv:bool=False, 
-		file_name:str="sector_price_history_processed_stg_1.csv", 
+		filename:str="sector_price_history_processed_stg_1.csv", 
 	) -> None:
 
 		# The primary dataframe for analysis. 
@@ -32,7 +32,7 @@ class ProcessTickerData(ManageDataset):
 			print("Pulling Ticker data from Yahoo Finance")
 
 			# An array of Ticker instances. 
-			self.ticker_data = [GetTickerData(ticker_name, start_date, end_date) for ticker_name in ticker_names]
+			self.ticker_data = [GetTickerData(ticker_name, start_date, end_date) for ticker_name in ticker_names] 
 
 			# A dataframe resulting from unioning the history attribute of each Ticker instance 
 			self.unioned_history = pd.concat([ticker.get_processed() for ticker in self.ticker_data]) 
@@ -40,7 +40,7 @@ class ProcessTickerData(ManageDataset):
 			# Merge the unioned ticker data with VIX data and set it as the default dataframe. 
 			self.df = self.get_df_with_vix() 
 
-		ManageDataset.__init__(self, file_name, use_csv) 
+		ManageDataset.__init__(self, filename, use_csv) 
 
 
 	def get_df_with_vix(self):
