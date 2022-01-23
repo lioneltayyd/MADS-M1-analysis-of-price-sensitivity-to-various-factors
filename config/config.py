@@ -32,13 +32,6 @@ NEWS_KEYWORDS_MAPPING = {
 	"news_rate_hikes": ["rate hikes"] 
 }
 
-# List of metrics to explore with. 
-METRICS_OPTIONS = [ 
-	"price_chg_c2o", "price_chg_o2c", "price_chg_c2c", "vix_chg_c2c", 
-	"volume_diff_to_med", "volume_pchg_from_med", 
-	"tscore_c2o", "tscore_o2c", "tscore_c2c", "vix_tscore_c2c", 
-]
-
 # Map the metrics to the intended processing step for analysis. 
 # dir = Compute the probability of exceeding a specific threshold. 
 # abv = Compute the probability of exceeeding above the specified threshold. 
@@ -60,14 +53,26 @@ INTENT_MEASURES = {
 	]), 
 } 
 
-# Set the conditioons or thresholds for each intended processing step. 
+# Set the conditions or thresholds for each intended processing step (listed as keys value). 
 # The following keys will be used as a regex pattern to process the data. 
 RE_PATS_AND_CONDITIONS = {
-	"_dir_\\d": 0.7, 
-	"_abv_\\d": 0.7, 
+	"_dir_\\d": 0.66, 
+	"_abv_\\d": 0.66, 
 	"_mag_\\d": 0.9, 
 	"_avg_\\d": 0.5, 
 }
+
+# List oof metrics to identify convergence. 
+METRICS_TO_IDENTIFY_CONVERGENCE = [
+	"tscore_c2c_mag_1", "volume_pchg_from_med_abv_1", "vix_tscore_c2c_mag_1"
+]
+
+# List of metrics to explore with. 
+METRIC_CHOICES = [ 
+	"tscore_c2o_mag_1", "tscore_c2c_mag_1", "tscore_o2c_mag_1", "vix_tscore_c2c_mag_1", 
+	"price_chg_c2o_dir_1", "price_chg_c2c_dir_1", "price_chg_o2c_dir_1", 
+	"volume_pchg_from_med_abv_1", 
+]
 
 # Recession data. To be parsed into Pandas DataFrame. 
 RECESSIONS = {

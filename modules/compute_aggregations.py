@@ -9,7 +9,10 @@ from modules.consolidate_eventdates import *
 from modules.compute_aggregations import * 
 
 # Custom configuration.
-from config.config import INTENT_MEASURES, RE_PATS_AND_CONDITIONS
+from config.config import (
+	INTENT_MEASURES, RE_PATS_AND_CONDITIONS, 
+	METRICS_TO_IDENTIFY_CONVERGENCE, METRIC_CHOICES
+)
 
 
 
@@ -137,7 +140,7 @@ class AggregateMeasures(ManageDataset):
 		return df_consolidated_agg
 
 
-	def identify_covergence(self, regex_pats_and_conditions:dict=RE_PATS_AND_CONDITIONS):
+	def identify_conditions(self, regex_pats_and_conditions:dict=RE_PATS_AND_CONDITIONS):
 		# Process on the copy instead of the original dataframe. 
 		df_identify_convergence = self.df.copy() 
 		
@@ -170,3 +173,20 @@ class AggregateMeasures(ManageDataset):
 		df_identify_convergence = df_identify_convergence[cols] 
 
 		return df_identify_convergence
+
+
+	def identify_convergence(self, metric_choices:list=METRIC_CHOICES): 
+		df_identify_convergence = self.identify_conditions() 
+
+		cols = ["ticker", "factor"] + metric_choices 
+
+		# Set the conditions for identifying convergence. 
+		boo_conditions = (df_identify_convergence["ticker"].notnull()) 
+		for metric in METRICS_TO_IDENTIFY_CONVERGENCE:  
+			boo_conditions &= (df_identify_convergence[metric] == 1.0) 
+
+		# Mark influential variables. 
+		df_identify_convergence.loc[:, "influential"] = 0
+		df_identify_convergence.loc[boo_conditions, "influential"] = 1
+
+		return df_identify_convergence.loc[:, cols + ["influential"]], boo_conditions

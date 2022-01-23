@@ -83,10 +83,6 @@ explore_visualisation | Just for visualisation exploration.
 
 You can access `processing_flowchart.html` inside the `docs` folder to view the diagrams. There are 2 pages in total. 
 
-Processing Workflow: 
-
 ![processing_flowchart](docs/processing_workflow.png) 
-
-Workload Distribution: 
 
 ![workload_distribution](docs/workload_distribution.png) 
