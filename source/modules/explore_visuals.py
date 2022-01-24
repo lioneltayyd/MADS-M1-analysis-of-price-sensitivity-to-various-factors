@@ -4,7 +4,7 @@ import pandas as pd
 import altair as alt 
 
 # Custom configuration. 
-from config.config import RECESSIONS 
+from source.config.config import RECESSIONS 
 
 
 

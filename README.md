@@ -23,7 +23,7 @@ XLE | Energy.
 
 Folder Name | Description
 --- | ---
-config | For parameter configuration. 
+source/config | Contain all the parameter configuration in python. 
 source/modules | Contain all the custom classes and functions. 
 source/notebook | Contain all the data processing steps and visualisation. 
 pipfile | For setting up the `pipenv` and tracking all the installed dependencies. 

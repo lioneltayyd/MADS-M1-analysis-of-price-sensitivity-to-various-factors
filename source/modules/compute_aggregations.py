@@ -9,7 +9,7 @@ from source.modules.consolidate_eventdates import *
 from source.modules.compute_aggregations import * 
 
 # Custom configuration.
-from config.config import (
+from source.config.config import (
 	INTENT_MEASURES, RE_PATS_AND_CONDITIONS, 
 	METRICS_TO_IDENTIFY_CONVERGENCE, METRIC_CHOICES
 )

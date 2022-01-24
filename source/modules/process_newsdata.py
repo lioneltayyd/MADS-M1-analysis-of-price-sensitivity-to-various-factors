@@ -7,7 +7,7 @@ from source.modules.manage_dataset import *
 from source.modules.process_tickerdata import *
 
 # Custom configuration.
-from config.config import NEWS_KEYWORDS_MAPPING
+from source.config.config import NEWS_KEYWORDS_MAPPING
 
 
 

@@ -7,7 +7,7 @@ from source.modules.get_tickerdata import *
 from source.modules.manage_dataset import * 
 
 # Custom configuration.
-from config.config import TICKER_TO_COLLECT
+from source.config.config import TICKER_TO_COLLECT
 
 
 

@@ -4,7 +4,7 @@ import pandas as pd
 import yfinance as yf
 
 # Custom configuration.
-from config.config import TICKER_DATE_COLLECT
+from source.config.config import TICKER_DATE_COLLECT
 
 
 

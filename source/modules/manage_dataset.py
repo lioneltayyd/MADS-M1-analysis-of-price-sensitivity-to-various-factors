@@ -4,7 +4,7 @@ import os, re
 import pandas as pd
 
 # Custom configuration.
-from config.config import DATASET_DIR
+from source.config.config import DATASET_DIR
 
 
 
