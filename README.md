@@ -24,8 +24,8 @@ XLE | Energy.
 Folder Name | Description
 --- | ---
 config | For parameter configuration. 
-modules | Contain all the custom classes and functions. 
-notebook | Contain all the data processing steps and visualisation. 
+source/modules | Contain all the custom classes and functions. 
+source/notebook | Contain all the data processing steps and visualisation. 
 pipfile | For setting up the `pipenv` and tracking all the installed dependencies. 
 
 ---
@@ -79,7 +79,7 @@ explore_visualisation | Just for visualisation exploration.
     ```
 
 1.  Install `Jupyter` extension on your VSCode or alternative IDE to enable running 
-    the notebook directly on your VSCode without installing `jupyter notebook`. 
+    the notebook directly on your VSCode or IDE without installing `jupyter notebook`. 
 
 1.  For VSCode users, press CMD + SHIFT + P and type `Reload Window` to reload the window after installing
     the python packages. Then repeat the previous step and type `Select Interpreter` to 
@@ -87,17 +87,20 @@ explore_visualisation | Just for visualisation exploration.
     to run the notebook. 
 
 --- 
+
 ## __Required Data Source Downloads__
 
 1.  A new directory called "dataset" should be created within the main project directory.
-2.  The following csv files should be downloaded from Kaggle and put in the dataset directory:
-    [raw_partner_headlines.csv](https://www.kaggle.com/miguelaenlle/massive-stock-news-analysis-db-for-nlpbacktests?select=raw_partner_headlines.csv),
-    [observance_dates_ext.csv](https://www.kaggle.com/lioneltyd/economic-reporting-data-20072021?select=observance_dates_ext.csv),
-    [santa_rally.csv](https://www.kaggle.com/lioneltyd/economic-reporting-data-20072021?select=santa_rally.csv),
-    [triple_witching_week.csv](https://www.kaggle.com/lioneltyd/economic-reporting-data-20072021?select=triple_witching_week.csv),
-    [economic_reported_date.csv](https://www.kaggle.com/lioneltyd/economic-reporting-data-20072021?select=economic_reported_date.csv)
+2.  The following csv files should be downloaded from Kaggle and put in the "dataset" directory:
+
+    - [raw_partner_headlines.csv](https://www.kaggle.com/miguelaenlle/massive-stock-news-analysis-db-for-nlpbacktests?select=raw_partner_headlines.csv)
+    - [observance_dates_ext.csv](https://www.kaggle.com/lioneltyd/economic-reporting-data-20072021?select=observance_dates_ext.csv)
+    - [santa_rally.csv](https://www.kaggle.com/lioneltyd/economic-reporting-data-20072021?select=santa_rally.csv)
+    - [triple_witching_week.csv](https://www.kaggle.com/lioneltyd/economic-reporting-data-20072021?select=triple_witching_week.csv)
+    - [economic_reported_date.csv](https://www.kaggle.com/lioneltyd/economic-reporting-data-20072021?select=economic_reported_date.csv)
 
 ---
+
 ## __Processing Workflow & Workload Distribution Diagram__
 
 You can access `processing_flowchart.html` inside the `docs` folder to view the diagrams. There are 2 pages in total. 
