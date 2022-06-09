@@ -2,7 +2,9 @@
 
 ## __Project Purpose__
 
-Analyse price sensitivity of different sector to multiple factors. Link to the slides can be found [here](https://gallery-tool.ai.umich.edu/media/gallery_427/user_61367/35-murphbre-liotayyd.pdf). 
+[Link to the slides can be found here](https://gallery-tool.ai.umich.edu/media/gallery_427/user_61367/35-murphbre-liotayyd.pdf). 
+
+Analyse price sensitivity of different sector to multiple factors. 
 
 Sectors include: 
 
